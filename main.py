@@ -1,10 +1,9 @@
 # Import and initialize the pygame library
 import pygame
-from pygame import display, draw, time, sprite
+from pygame import display, draw, time
 
-from app.classes.entities import NPC, Food, npcs, foods
+from app.classes.entities import NPC, Food, foods, npcs
 from app.config import colour, config
-
 
 # Basic Pygame Setup
 pygame.init()
@@ -73,7 +72,6 @@ while running:
 
     npcs.update(foods)
     npcs.draw(screen)
-
 
     # Collision detection
     # collisions = sprite.groupcollide(npcs, foods, False, True)

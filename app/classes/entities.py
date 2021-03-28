@@ -2,9 +2,7 @@ import math
 import random
 
 from app.config import config
-from app.functions import common
-
-from pygame import sprite, Surface
+from pygame import Surface, sprite
 
 # Use a specific seed
 if config.RANDOM_SEED:
@@ -37,7 +35,7 @@ class NPC(sprite.Sprite):
         self.pregnant = None
         self.energy = config.FOOD_VALUE
         self.energy_use = energy_use or random.random()
-        self.speed = (self.energy_use / 2) 
+        self.speed = self.energy_use / 2
 
     def update(self, foods):
         self.find_target(foods)
@@ -78,7 +76,7 @@ class NPC(sprite.Sprite):
                 self.y += self.speed
             elif self.y > self.target_y:
                 self.y -= self.speed
-            
+
         self.energy = self.energy - 1 * config.BASE_ENERGY_USE
 
         self.update_center()
