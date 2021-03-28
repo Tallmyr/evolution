@@ -74,7 +74,7 @@ while running:
 
         if npc.energy >= config.FOOD_VALUE * 3 and npc.pregnant is None:
             npc.pregnant = 20
-        
+
         if npc.pregnant == 0:
             npc.breed(npcs)
 
