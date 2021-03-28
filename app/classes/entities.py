@@ -88,13 +88,23 @@ class NPC:
         return food_list
 
     def breed(self, npcs):
-        self.pregnant = None
-        self.energy -= config.FOOD_VALUE
-        npcs.append(
-            NPC(
-                self.colour, self.x + 10, self.y + 10, self.w, self.h, self.energy_usage
+        if self.pregnant == 0:
+            self.pregnant = None
+            self.energy -= config.FOOD_VALUE
+            npcs.append(
+                NPC(
+                    self.colour,
+                    self.x + 10,
+                    self.y + 10,
+                    self.w,
+                    self.h,
+                    self.energy_usage,
+                )
             )
-        )
+
+    def check_pregnant(self):
+        if (self.energy > config.FOOD_VALUE * 3 and self.pregnant is None):
+            self.pregnant = 20
 
 
 class Food:
@@ -104,3 +114,11 @@ class Food:
         self.r = 2.5
         self.loc = [self.x, self.y]
         self.draw = (self.x, self.y)
+
+    def add(foods, food_time):
+        if food_time >= config.FOOD_TIMER:
+            for _ in range(2):
+                foods.append(Food())
+            food_time = 0
+        food_time += 1
+        return foods, food_time
