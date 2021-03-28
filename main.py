@@ -16,7 +16,7 @@ clock = time.Clock()
 
 # Set up the drawing window
 
-screen = display.set_mode([800, 800])
+screen = display.set_mode([config.SCREEN_W, config.SCREEN_H])
 
 # Create npcs
 npcs = [NPC() for _ in range(config.START_NPC)]
@@ -43,7 +43,16 @@ while running:
     screen.fill((200, 200, 200))
 
     # Create the grass
-    draw.rect(screen, (colour.GREEN), (50, 50, 700, 700))
+    draw.rect(
+        screen,
+        (colour.GREEN),
+        (
+            config.SCREEN_W * config.SPAWN_AREA,
+            config.SCREEN_H * config.SPAWN_AREA,
+            config.SCREEN_W * (1 - (config.SPAWN_AREA * 2)),
+            config.SCREEN_H * (1 - (config.SPAWN_AREA * 2)),
+        ),
+    )
 
     # Update Food
     for food in foods:
@@ -60,11 +69,11 @@ while running:
         draw.rect(screen, npc.colour, (npc.draw))
         foods = npc.eat(foods)
 
-        if npc.food >= 2:
-            npc.food -= 1
+        if npc.energy >= config.FOOD_VALUE * 2:
+            npc.energy -= config.FOOD_VALUE
             npcs.append(NPC(npc.colour, npc.x + 5, npc.y + 5, npc.w, npc.h, npc.speed))
 
-    npcs = [npc for npc in npcs if npc.food >= 0]
+    npcs = [npc for npc in npcs if npc.energy >= 0]
 
     # Flip the display
 
