@@ -12,6 +12,13 @@ npcs = sprite.Group()
 foods = sprite.Group()
 
 
+def npc_collide(sprite1, sprite2):
+    if sprite1 is not sprite2:
+        return sprite1.rect.colliderect(sprite2.rect)
+    else:
+        return False
+
+
 class NPC(sprite.Sprite):
     def __init__(self, x=None, y=None, w=None, h=None, energy_use=None, colour=None):
         sprite.Sprite.__init__(self, npcs)
@@ -67,19 +74,35 @@ class NPC(sprite.Sprite):
         if self.pregnant:
             self.pregnant -= 1
         else:
-            if self.x < self.target_x:
-                self.x += self.speed
-            elif self.x > self.target_x:
-                self.x -= self.speed
-
-            if self.y < self.target_y:
-                self.y += self.speed
-            elif self.y > self.target_y:
-                self.y -= self.speed
+            block = sprite.spritecollide(self, npcs, False, npc_collide)
+            if block:
+                self.move_away(block)
+            else:
+                self.move_to()
 
         self.energy = self.energy - 1 * config.BASE_ENERGY_USE
 
         self.update_center()
+
+    def move_to(self):
+        if self.x < self.target_x:
+            self.x += self.speed
+        elif self.x > self.target_x:
+            self.x -= self.speed
+        if self.y < self.target_y:
+            self.y += self.speed
+        elif self.y > self.target_y:
+            self.y -= self.speed
+
+    def move_away(self, block):
+        if self.x < block[0].x:
+            self.x -= self.speed
+        elif self.x > block[0].x:
+            self.x += self.speed
+        if self.y < block[0].y:
+            self.y += self.speed
+        elif self.y > block[0].y:
+            self.y -= self.speed
 
     def update_center(self):
         self.rect.center = (self.x, self.y)
