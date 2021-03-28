@@ -1,6 +1,3 @@
-# Simple pygame program
-
-
 # Import and initialize the pygame library
 import pygame
 from pygame import display, draw, time
@@ -8,30 +5,27 @@ from pygame import display, draw, time
 from app.classes.entities import NPC, Food
 from app.config import colour, config
 
+
+# Basic Pygame Setup
 pygame.init()
-# Setup the clock for a decent framerate
 
-clock = time.Clock()
-
-
-# Set up the drawing window
 
 screen = display.set_mode([config.SCREEN_W, config.SCREEN_H])
 
-# Create npcs
+# Create Entities for first run
 npcs = [NPC() for _ in range(config.START_NPC)]
 foods = [Food() for _ in range(config.START_FOOD)]
 
+# Set Game variables
+clock = time.Clock()
+screen = display.set_mode([config.SCREEN_W, config.SCREEN_H])
 food_time = 0
 
-# Run until the user asks to quit
-
+# Main Loop
 running = True
-
 while running:
 
-    # Did the user click the window close button?
-
+    # Close Button
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
@@ -55,40 +49,35 @@ while running:
         ),
     )
 
+    # Game Logic
+
     # Update Food
+    # Add more food
+    foods, food_time = Food.add(foods, food_time)
+
     for food in foods:
         draw.circle(screen, (colour.BLUE), (food.draw), food.r)
 
-    if food_time >= config.FOOD_TIMER:
-        for _ in range(2):
-            foods.append(Food())
-        food_time = 0
-    food_time += 1
-
     # Update NPCs
+
+    #
     for npc in npcs:
         npc.find_target(foods)
         npc.move()
-        draw.rect(screen, npc.colour, (npc.draw))
         foods = npc.eat(foods)
+        npc.check_pregnant()
+        npc.breed(npcs)
 
-        if npc.energy >= config.FOOD_VALUE * 3 and npc.pregnant is None:
-            npc.pregnant = 20
+        draw.rect(screen, npc.colour, (npc.draw))
 
-        if npc.pregnant == 0:
-            npc.breed(npcs)
-
+    # Kill any NPCs that have no food left.
     npcs = [npc for npc in npcs if npc.energy >= 0]
 
+    # Draw and tick clock
     # Flip the display
-
     display.flip()
-
-    # Ensure program maintains a rate of 30 frames per second
-
     clock.tick(144)
 
 
-# Done! Time to quit.
-
+# End Program
 pygame.quit()
