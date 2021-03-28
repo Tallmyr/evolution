@@ -66,7 +66,6 @@ while running:
     clock.tick(144)
 
 
-
 # Done! Time to quit.
 
 pygame.quit()
