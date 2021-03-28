@@ -22,6 +22,7 @@ screen = display.set_mode([config.SCREEN_W, config.SCREEN_H])
 npcs = [NPC() for _ in range(config.START_NPC)]
 foods = [Food() for _ in range(config.START_FOOD)]
 
+food_time = 0
 
 # Run until the user asks to quit
 
@@ -58,9 +59,11 @@ while running:
     for food in foods:
         draw.circle(screen, (colour.BLUE), (food.draw), food.r)
 
-    if len(foods) < config.START_FOOD - 20:
-        for _ in range(20):
+    if food_time >= config.FOOD_TIMER:
+        for _ in range(2):
             foods.append(Food())
+        food_time = 0
+    food_time += 1
 
     # Update NPCs
     for npc in npcs:
@@ -69,9 +72,11 @@ while running:
         draw.rect(screen, npc.colour, (npc.draw))
         foods = npc.eat(foods)
 
-        if npc.energy >= config.FOOD_VALUE * 2:
-            npc.energy -= config.FOOD_VALUE
-            npcs.append(NPC(npc.colour, npc.x + 5, npc.y + 5, npc.w, npc.h, npc.speed))
+        if npc.energy >= config.FOOD_VALUE * 3 and npc.pregnant is None:
+            npc.pregnant = 20
+        
+        if npc.pregnant == 0:
+            npc.breed(npcs)
 
     npcs = [npc for npc in npcs if npc.energy >= 0]
 
