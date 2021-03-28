@@ -4,6 +4,11 @@ import math
 
 class NPC:
     def __init__(self):
+        self.colour = (
+            random.randint(20, 235),
+            random.randint(20, 235),
+            random.randint(20, 235),
+        )
         self.x = random.randint(0, 50)
         self.y = random.randint(0, 750)
         self.w = 5
@@ -43,11 +48,7 @@ class NPC:
         self.draw = (self.x, self.y, self.w, self.h)
 
     def eat(self, foods):
-        food_list = []
-        for food in foods:
-            if food.loc != self.loc:
-                food_list.append(food)
-        return food_list
+        return [food for food in foods if food.loc != self.loc]
 
 
 class Food:

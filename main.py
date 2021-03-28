@@ -19,8 +19,8 @@ clock = time.Clock()
 screen = display.set_mode([800, 800])
 
 # Create npcs
-npcs = [NPC() for _ in range(10)]
-foods = [Food() for _ in range(10)]
+npcs = [NPC() for _ in range(50)]
+foods = [Food() for _ in range(50)]
 # Create Food
 
 
@@ -54,7 +54,7 @@ while running:
     for npc in npcs:
         npc.find_target(foods)
         npc.move()
-        draw.rect(screen, (colour.RED), (npc.draw))
+        draw.rect(screen, npc.colour, (npc.draw))
         foods = npc.eat(foods)
 
     # Flip the display
