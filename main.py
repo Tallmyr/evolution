@@ -75,6 +75,7 @@ while running:
 
     # Update NPCs
 
+    npcs.update(foods)
     npcs.draw(screen)
 
     #

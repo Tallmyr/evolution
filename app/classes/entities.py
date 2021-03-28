@@ -15,43 +15,53 @@ class NPC(sprite.Sprite):
     def __init__(self):
         sprite.Sprite.__init__(self)
 
+        self.x = random.randint(0, 50)
+        self.y = random.randint(0, 50)
+
         self.image = Surface([5, 5])
         self.image.fill((255, 0, 0))
 
         self.rect = self.image.get_rect()
-        self.rect.center = (random.randint(0, 50), random.randint(0, 50))
+        self.rect.center = (self.x, self.y)
 
-    # def find_target(self, foods):
-    #     self.distance = 5000
-    #     for food in foods:
-    #         distance = math.dist(self.loc, food.loc)
-    #         if distance < self.distance:
-    #             self.target = food
-    #             self.target_x = food.x
-    #             self.target_y = food.y
-    #             self.distance = distance
+        self.pregnant = None
+        self.speed = 1
 
-    # def update(self):
-    #     if self.pregnant:
-    #         self.pregnant -= 1
-    #     else:
-    #         if self.x < self.target_x:
-    #             self.x += self.speed
-    #         elif self.x > self.target_x:
-    #             self.x -= self.speed
+    def update(self, foods):
+        self.find_target(foods)
+        self.move()
 
-    #         if self.y < self.target_y:
-    #             self.y += self.speed
-    #         elif self.y > self.target_y:
-    #             self.y -= self.speed
+    def find_target(self, foods):
+        self.distance = 5000
+        for food in foods:
+            distance = math.dist(self.rect.center, food.rect.center)
+            if distance < self.distance:
+                self.target = food
+                self.target_x = food.x
+                self.target_y = food.y
+                self.distance = distance
 
-    #     self.energy = self.energy - self.energy_usage * config.BASE_ENERGY_USE
+    def move(self):
+        if self.pregnant:
+            self.pregnant -= 1
+        else:
+            if self.x < self.target_x:
+                self.x += self.speed
+            elif self.x > self.target_x:
+                self.x -= self.speed
 
-    #     self.update_loc()
-    #     self.update_draw()
+            if self.y < self.target_y:
+                self.y += self.speed
+            elif self.y > self.target_y:
+                self.y -= self.speed
 
-    # def update_loc(self):
-    #     self.loc = self.x, self.y
+        # self.energy = self.energy - self.energy_usage * config.BASE_ENERGY_USE
+
+        self.update_center()
+        # self.update_draw()
+
+    def update_center(self):
+        self.rect.center = (self.x, self.y)
 
     # def update_draw(self):
     #     self.draw = (self.x, self.y, self.w, self.h)
@@ -94,14 +104,11 @@ class Food(sprite.Sprite):
         self.image = Surface([5, 5])
         self.image.fill((0, 0, 255))
 
-        self.rect = self.image.get_rect()
-        self.rect.center = (random.randint(50, 750), random.randint(50, 750))
-
         self.x = random.randint(50, 750)
         self.y = random.randint(50, 750)
-        self.r = 2.5
-        self.loc = [self.x, self.y]
-        self.draw = (self.x, self.y)
+
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.x, self.y)
 
     def add(foods, food_time):
         if food_time >= config.FOOD_TIMER:
