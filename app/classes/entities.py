@@ -1,6 +1,13 @@
 import random
 import math
 
+from app.config import config
+
+
+# Use a specific seed
+if config.RANDOM_SEED:
+    random.seed(config.RANDOM_SEED)
+
 
 class NPC:
     def __init__(self, colour=None, x=None, y=None, w=None, h=None, speed=None):

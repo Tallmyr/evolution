@@ -21,7 +21,6 @@ screen = display.set_mode([800, 800])
 # Create npcs
 npcs = [NPC() for _ in range(config.START_NPC)]
 foods = [Food() for _ in range(config.START_FOOD)]
-# Create Food
 
 
 # Run until the user asks to quit
