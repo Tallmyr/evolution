@@ -13,9 +13,10 @@ class NPC:
         self.y = random.randint(0, 750)
         self.w = 5
         self.h = 5
-        self.speed = 1
+        self.speed = random.random()
         self.loc = [self.x, self.y]
         self.draw = (self.x, self.y, self.w, self.h)
+        self.food = 0
 
     def find_target(self, foods):
         self.distance = 5000
@@ -42,12 +43,13 @@ class NPC:
         self.update_draw()
 
     def update_loc(self):
-        self.loc = [self.x, self.y]
+        self.loc = [round(self.x), round(self.y)]
 
     def update_draw(self):
         self.draw = (self.x, self.y, self.w, self.h)
 
     def eat(self, foods):
+        self.food += 1
         return [food for food in foods if food.loc != self.loc]
 
 
