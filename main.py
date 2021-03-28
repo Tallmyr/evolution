@@ -73,11 +73,6 @@ while running:
     npcs.update(foods)
     npcs.draw(screen)
 
-    # Collision detection
-    # collisions = sprite.groupcollide(npcs, foods, False, True)
-    # for npc in collisions:
-    #     npc.eat()
-
     # Draw and tick clock
     # Flip the display
     display.flip()
