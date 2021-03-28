@@ -16,8 +16,6 @@ screen = display.set_mode([config.SCREEN_W, config.SCREEN_H])
 for _ in range(config.START_NPC):
     new_npc = NPC()
     npcs.add(new_npc)
-# npcs = [NPC() for _ in range(config.START_NPC)]
-# foods = [Food() for _ in range(config.START_FOOD)]
 
 for _ in range(config.START_FOOD):
     new_food = Food()
@@ -64,9 +62,6 @@ while running:
 
     # Add more food
     food_time = Food.grow(food_time)
-
-    # for food in foods:
-    #     draw.circle(screen, (colour.BLUE), (food.draw), food.r)
 
     # Update NPCs
 
