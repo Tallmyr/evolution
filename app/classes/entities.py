@@ -36,7 +36,7 @@ class NPC:
 
         self.loc = [self.x, self.y]
         self.draw = (self.x, self.y, self.w, self.h)
-        self.food = 1
+        self.energy = config.FOOD_VALUE
 
     def find_target(self, foods):
         self.distance = 5000
@@ -58,7 +58,7 @@ class NPC:
             self.y += self.speed
         elif self.y > self.target_y:
             self.y -= self.speed
-        self.food = self.food - 0.001
+        self.energy = self.energy - config.BASE_ENERGY_USE
 
         self.update_loc()
         self.update_draw()
@@ -73,7 +73,7 @@ class NPC:
         food_list = []
         for food in foods:
             if food.loc == self.loc:
-                self.food += 1
+                self.energy += config.FOOD_VALUE
             else:
                 food_list.append(food)
         return food_list
