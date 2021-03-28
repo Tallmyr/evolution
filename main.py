@@ -2,7 +2,7 @@
 import pygame
 from pygame import display, draw, time, sprite
 
-from app.classes.entities import NPC, Food
+from app.classes.entities import NPC, Food, npcs, foods
 from app.config import colour, config
 
 
@@ -13,10 +13,6 @@ pygame.init()
 screen = display.set_mode([config.SCREEN_W, config.SCREEN_H])
 
 # Create Entities for first run
-
-npcs = sprite.Group()
-foods = sprite.Group()
-
 
 for _ in range(config.START_NPC):
     new_npc = NPC()
@@ -68,7 +64,7 @@ while running:
     foods.draw(screen)
 
     # Add more food
-    # foods, food_time = Food.add(foods, food_time)
+    food_time = Food.grow(food_time)
 
     # for food in foods:
     #     draw.circle(screen, (colour.BLUE), (food.draw), food.r)
@@ -78,18 +74,11 @@ while running:
     npcs.update(foods)
     npcs.draw(screen)
 
-    #
-    # for npc in npcs:
-    #     npc.find_target(foods)
-    #     npc.move()
-    #     foods = npc.eat(foods)
-    #     npc.check_pregnant()
-    #     npc.breed(npcs)
 
-    #     draw.rect(screen, npc.colour, (npc.draw))
-
-    # Kill any NPCs that have no food left.
-    # npcs = [npc for npc in npcs if npc.energy >= 0]
+    # Collision detection
+    # collisions = sprite.groupcollide(npcs, foods, False, True)
+    # for npc in collisions:
+    #     npc.eat()
 
     # Draw and tick clock
     # Flip the display

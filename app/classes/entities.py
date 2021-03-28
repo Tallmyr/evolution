@@ -10,26 +10,50 @@ from pygame import sprite, Surface
 if config.RANDOM_SEED:
     random.seed(config.RANDOM_SEED)
 
+npcs = sprite.Group()
+foods = sprite.Group()
+
 
 class NPC(sprite.Sprite):
-    def __init__(self):
-        sprite.Sprite.__init__(self)
+    def __init__(self, x=None, y=None, w=None, h=None, energy_use=None, colour=None):
+        sprite.Sprite.__init__(self, npcs)
 
-        self.x = random.randint(0, 50)
-        self.y = random.randint(0, 50)
+        self.x = x or random.randint(0, config.SCREEN_W)
+        self.y = y or random.randint(0, config.SCREEN_H)
+        self.w = w or random.randint(5, 15)
+        self.h = h or random.randint(5, 15)
+        self.colour = colour or (
+            random.randint(25, 230),
+            random.randint(25, 230),
+            random.randint(25, 230),
+        )
 
-        self.image = Surface([5, 5])
-        self.image.fill((255, 0, 0))
+        self.image = Surface([self.w, self.h])
+        self.image.fill(self.colour)
 
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
         self.pregnant = None
-        self.speed = 1
+        self.energy = config.FOOD_VALUE
+        self.energy_use = energy_use or random.random()
+        self.speed = (self.energy_use / 2) 
 
     def update(self, foods):
         self.find_target(foods)
         self.move()
+
+        if sprite.spritecollide(self, foods, True):
+            self.eat()
+
+        self.check_pregnant()
+        self.breed()
+
+        if self.energy <= 0:
+            self.kill()
+
+        if self.energy > config.FOOD_VALUE * 3:
+            self.breed
 
     def find_target(self, foods):
         self.distance = 5000
@@ -54,52 +78,31 @@ class NPC(sprite.Sprite):
                 self.y += self.speed
             elif self.y > self.target_y:
                 self.y -= self.speed
-
-        # self.energy = self.energy - self.energy_usage * config.BASE_ENERGY_USE
+            
+        self.energy = self.energy - 1 * config.BASE_ENERGY_USE
 
         self.update_center()
-        # self.update_draw()
 
     def update_center(self):
         self.rect.center = (self.x, self.y)
 
-    # def update_draw(self):
-    #     self.draw = (self.x, self.y, self.w, self.h)
+    def eat(self):
+        self.energy += config.FOOD_VALUE
 
-    # def eat(self, foods):
-    #     food_list = []
-    #     for food in foods:
-    #         if math.isclose(food.x, self.x, abs_tol=1) and math.isclose(
-    #             food.y, self.y, abs_tol=1
-    #         ):
-    #             self.energy += config.FOOD_VALUE
-    #         else:
-    #             food_list.append(food)
-    #     return food_list
+    def breed(self):
+        if self.pregnant == 0:
+            self.pregnant = None
+            self.energy -= config.FOOD_VALUE
+            NPC(self.x + 10, self.y + 10, self.w, self.h, self.energy_use, self.colour)
 
-    # def breed(self, npcs):
-    #     if self.pregnant == 0:
-    #         self.pregnant = None
-    #         self.energy -= config.FOOD_VALUE
-    #         npcs.append(
-    #             NPC(
-    #                 self.colour,
-    #                 self.x + 10,
-    #                 self.y + 10,
-    #                 self.w,
-    #                 self.h,
-    #                 self.energy_usage,
-    #             )
-    #         )
-
-    # def check_pregnant(self):
-    #     if self.energy > config.FOOD_VALUE * 3 and self.pregnant is None:
-    #         self.pregnant = 20
+    def check_pregnant(self):
+        if self.energy > config.FOOD_VALUE * 3 and self.pregnant is None:
+            self.pregnant = 200
 
 
 class Food(sprite.Sprite):
     def __init__(self):
-        sprite.Sprite.__init__(self)
+        sprite.Sprite.__init__(self, foods)
 
         self.image = Surface([5, 5])
         self.image.fill((0, 0, 255))
@@ -110,10 +113,10 @@ class Food(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (self.x, self.y)
 
-    def add(foods, food_time):
+    def grow(food_time):
         if food_time >= config.FOOD_TIMER:
             for _ in range(2):
-                foods.append(Food())
+                Food()
             food_time = 0
         food_time += 1
-        return foods, food_time
+        return food_time
