@@ -4,11 +4,15 @@ version = "0.1.0"
 description = "Evolution Simulation using Python and Pygame"
 authors = ["Simon Tallmyr"]
 license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+pygame = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
+flake8 = "^3.9.0"
+black = "^20.8b1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
