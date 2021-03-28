@@ -6,7 +6,7 @@ import pygame
 from pygame import display, draw, time
 
 from app.classes.entities import NPC, Food
-from app.config import colour
+from app.config import colour, config
 
 pygame.init()
 # Setup the clock for a decent framerate
@@ -19,8 +19,8 @@ clock = time.Clock()
 screen = display.set_mode([800, 800])
 
 # Create npcs
-npcs = [NPC() for _ in range(50)]
-foods = [Food() for _ in range(50)]
+npcs = [NPC() for _ in range(config.START_NPC)]
+foods = [Food() for _ in range(config.START_FOOD)]
 # Create Food
 
 
@@ -50,12 +50,22 @@ while running:
     for food in foods:
         draw.circle(screen, (colour.BLUE), (food.draw), food.r)
 
+    if len(foods) < config.START_FOOD - 20:
+        for _ in range(20):
+            foods.append(Food())
+
     # Update NPCs
     for npc in npcs:
         npc.find_target(foods)
         npc.move()
         draw.rect(screen, npc.colour, (npc.draw))
         foods = npc.eat(foods)
+
+        if npc.food >= 2:
+            npc.food -= 1
+            npcs.append(NPC(npc.colour, npc.x + 5, npc.y + 5, npc.w, npc.h, npc.speed))
+
+    npcs = [npc for npc in npcs if npc.food >= 0]
 
     # Flip the display
 

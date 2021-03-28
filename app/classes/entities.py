@@ -3,20 +3,33 @@ import math
 
 
 class NPC:
-    def __init__(self):
-        self.colour = (
-            random.randint(20, 235),
-            random.randint(20, 235),
-            random.randint(20, 235),
-        )
-        self.x = random.randint(0, 50)
-        self.y = random.randint(0, 750)
-        self.w = 5
-        self.h = 5
-        self.speed = random.random()
+    def __init__(self, colour=None, x=None, y=None, w=None, h=None, speed=None):
+        self.colour = colour
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+        self.speed = speed
+        if self.colour is None:
+            self.colour = (
+                random.randint(20, 235),
+                random.randint(20, 235),
+                random.randint(20, 235),
+            )
+        if self.x is None:
+            self.x = random.randint(0, 50)
+        if self.y is None:
+            self.y = random.randint(0, 750)
+        if self.w is None:
+            self.w = random.randint(3, 7)
+        if self.h is None:
+            self.h = random.randint(3, 7)
+        if self.speed is None:
+            self.speed = random.random()
+
         self.loc = [self.x, self.y]
         self.draw = (self.x, self.y, self.w, self.h)
-        self.food = 0
+        self.food = 1
 
     def find_target(self, foods):
         self.distance = 5000
@@ -38,6 +51,7 @@ class NPC:
             self.y += self.speed
         elif self.y > self.target_y:
             self.y -= self.speed
+        self.food = self.food - 0.001
 
         self.update_loc()
         self.update_draw()
@@ -49,8 +63,13 @@ class NPC:
         self.draw = (self.x, self.y, self.w, self.h)
 
     def eat(self, foods):
-        self.food += 1
-        return [food for food in foods if food.loc != self.loc]
+        food_list = []
+        for food in foods:
+            if food.loc == self.loc:
+                self.food += 1
+            else:
+                food_list.append(food)
+        return food_list
 
 
 class Food:
